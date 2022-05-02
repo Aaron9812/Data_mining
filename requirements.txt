@@ -4,3 +4,9 @@ requests
 numpy
 nltk
 scikit-learn
+imbalanced-learn
+transformers
+torch
+seaborn
+matplotlib
+emoji
