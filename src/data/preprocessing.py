@@ -12,6 +12,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import sklearn.model_selection as ms
 from sklearn.utils import resample
 import demoji
+import re
 
 
 demoji.download_codes()
@@ -22,7 +23,7 @@ nltk.download('wordnet')
 
 
 def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, split_on='preprocessed', upsample=True, do_emojis=True):
-    df = load_data()
+    df = load_data();
     df['preprocessed'] = preprocess(
         df['tweet'], rem_stop=rem_stop, do_stem=do_stem, do_lem=do_lem, do_emojis=do_emojis)
 
@@ -139,3 +140,17 @@ def convert_emoji(text: str) -> str:
         text_with_emoji = text_with_emoji.replace(key, dictionary[key] + " ")
 
     return text_with_emoji
+
+
+def get_features(df: pd.DataFrame):
+    df["n_mentions"] = df["tweet"].apply(lambda x: count_user_mentions(x))
+    df["hashtags"] = df["tweet"].apply(lambda x: identify_hashtags(x))
+
+    return df
+
+def count_user_mentions(text:str) ->int:
+    return text.count("@user")
+
+def identify_hashtags(text:str) -> list:
+    pattern = re.compile(r"#(\w+)")
+    return pattern.findall(text)
