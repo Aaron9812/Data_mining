@@ -13,7 +13,8 @@ import sklearn.model_selection as ms
 from sklearn.utils import resample
 import demoji
 import re
-
+import spacy
+from typing import Tuple
 
 demoji.download_codes()
 
@@ -21,20 +22,22 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+#!python -m spacy download en_core_web_lg
 
-def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, split_on='preprocessed', upsample=True, do_emojis=True):
-    df = load_data();
+def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, upsample=True, do_emojis=True):
+    df = load_data()
+
     df['preprocessed'] = preprocess(
         df['tweet'], rem_stop=rem_stop, do_stem=do_stem, do_lem=do_lem, do_emojis=do_emojis)
 
-    tfidf = train_tfidf(df['preprocessed'])
-
     if split is True:
-        df_train, df_test = split_data(df, split_on)
+        df_train, df_test = split_data(df)
+        tfidf = train_tfidf(df_train['preprocessed'])
         if upsample is True:
             df_train = upsampling(df_train)
         return tfidf, df_train, df_test
     else:
+        tfidf = train_tfidf(df['preprocessed'])
         return tfidf, df
 
 
@@ -45,11 +48,11 @@ def load_data():
 
 
 def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True):
-
+    assert do_stem != do_lem
     preprocessed = []
     for tweet in data:
         if do_emojis is True:
-            tweet = convert_emoji(tweet)
+            tweet, _ = convert_emoji(tweet)
         tokens = tokenization(remove_punctuation(tweet))
         if rem_stop is True:
             tokens = remove_stopwords(tokens)
@@ -75,14 +78,9 @@ def train_tfidf(data):
     return tf.fit(data)
 
 
-def split_data(df: pd.DataFrame, split_on='tweet', test_size=0.2, random_state=17):
-    y = df['label']
-    X = df[split_on]
-    (X_train, X_test, y_train, y_test) = ms.train_test_split(
-        X, y, test_size=test_size, random_state=random_state, stratify=y)
+def split_data(df: pd.DataFrame, test_size=0.2, random_state=17):
 
-    df_train = pd.concat([y_train, X_train], axis=1)
-    df_test = pd.concat([y_test, X_test], axis=1)
+    df_train, df_test = ms.train_test_split(df, test_size=test_size, random_state=random_state, stratify=df["label"])
 
     return df_train, df_test
 
@@ -121,7 +119,7 @@ def lemmatization(tokens: pd.Series):
     return tokens.apply(lambda token: lemmatizer.lemmatize(token))
 
 
-def convert_emoji(text: str) -> str:
+def convert_emoji(text: str):
     # convert string to binary representation
     binary = ' '.join(format(ord(x), 'b') for x in text)
 
@@ -130,22 +128,31 @@ def convert_emoji(text: str) -> str:
     try:
         text_with_emoji = bytes([int(x, 2) for x in listRes]).decode('utf-8')
     except UnicodeDecodeError:
-        return text
+        return text, []
 
     # get all emojis
     dictionary = demoji.findall(text_with_emoji)
 
     # replace emojis with text representation
+    emojis = []
     for key in dictionary.keys():
+        if key in text_with_emoji: emojis.append(dictionary[key])
         text_with_emoji = text_with_emoji.replace(key, dictionary[key] + " ")
 
-    return text_with_emoji
+    return text_with_emoji, emojis
 
+def emb_data(data):
+    nlp = spacy.load("en_core_web_lg") #If you are using colab and this buggs out: Restart runtime but DO NOT install the "en_core_web_lg" again.
+    tweets = data.values.tolist()
+    nlp.disable_pipes("parser", "ner") #remove pipe we do not need
+    embeddings = [sum([word.vector for word in item])/len(item) for item in nlp.pipe(tweets)] #Takes some time...
+    return pd.Series(embeddings).values
 
 def get_features(df: pd.DataFrame):
     df["n_mentions"] = df["tweet"].apply(lambda x: count_user_mentions(x))
     df["hashtags"] = df["tweet"].apply(lambda x: identify_hashtags(x))
-
+    df["emojis"] = df["tweet"].apply(lambda x: convert_emoji(x)[1])
+    df["emb"] = emb_data(df["tweet"])
     return df
 
 def count_user_mentions(text:str) ->int:
@@ -154,3 +161,6 @@ def count_user_mentions(text:str) ->int:
 def identify_hashtags(text:str) -> list:
     pattern = re.compile(r"#(\w+)")
     return pattern.findall(text)
+
+
+
