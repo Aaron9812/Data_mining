@@ -48,7 +48,7 @@ def load_data():
 
 
 def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True):
-    assert do_stem != do_lem
+    # assert do_stem != do_lem
     preprocessed = []
     for tweet in data:
         if do_emojis is True:
