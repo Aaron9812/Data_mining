@@ -71,12 +71,3 @@ def get_impact_words(df_train: pd.DataFrame, vect: TfidfVectorizer, model = nb.M
         top10 = np.argsort(model.feature_log_prob_[i])[-10:]
         print("%s: %s" % (class_label,
             " ".join(feature_names[j] for j in top10)))
-
-def plot_confusion(df_test: pd.DataFrame, vect: TfidfVectorizer, model):
-    
-    
-    cm = confusion_matrix(yc_test, mnbc.predict(Xc_test))
-
-    fig, ax = plot_confusion_matrix(conf_mat=cm)
-    plt.title("Confusion Matrix")
-    plt.show()
