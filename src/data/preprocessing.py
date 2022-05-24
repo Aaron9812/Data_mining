@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 from datasets import load_dataset
 from string import punctuation
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 import sklearn.model_selection as ms
 from sklearn.utils import resample
 import demoji
@@ -24,21 +24,27 @@ nltk.download('wordnet')
 
 #!python -m spacy download en_core_web_lg
 
-def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, upsample=True, do_emojis=True):
+def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, upsample=True, do_emojis=True, no_user=False, vectorizer='tfidf'):
     df = load_data()
 
     df['preprocessed'] = preprocess(
-        df['tweet'], rem_stop=rem_stop, do_stem=do_stem, do_lem=do_lem, do_emojis=do_emojis)
+        df['tweet'], rem_stop=rem_stop, do_stem=do_stem, do_lem=do_lem, do_emojis=do_emojis, no_user=no_user)
 
     if split is True:
         df_train, df_test = split_data(df)
-        tfidf = train_tfidf(df_train['preprocessed'])
+        if vectorizer == 'tfidf':
+            vect = train_tfidf(df_train['preprocessed'])
+        else:
+            vect = train_count_vectorizer(df_train['preprocessed'])
         if upsample is True:
             df_train = upsampling(df_train)
-        return tfidf, df_train, df_test
+        return vect, df_train, df_test
     else:
-        tfidf = train_tfidf(df['preprocessed'])
-        return tfidf, df
+        if vectorizer == 'tfidf':
+            vect = train_tfidf(df['preprocessed'])
+        else:
+            vect = train_count_vectorizer(df['preprocessed'])
+        return vect, df
 
 
 def load_data():
@@ -47,9 +53,11 @@ def load_data():
     return df
 
 
-def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True):
-    assert do_stem != do_lem
+def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True, no_user=False):
+    # assert do_stem != do_lem
     preprocessed = []
+    if no_user is True:
+        data = data.str.replace("user","")
     for tweet in data:
         if do_emojis is True:
             tweet, _ = convert_emoji(tweet)
@@ -76,6 +84,18 @@ def train_tfidf(data):
         token_pattern=None)
 
     return tf.fit(data)
+
+def train_count_vectorizer(data):
+    def dummy(text):
+        return text
+
+    co = CountVectorizer(
+        analyzer='word',
+        tokenizer=dummy,
+        preprocessor=dummy,
+        token_pattern=None)
+
+    return co.fit(data)
 
 
 def split_data(df: pd.DataFrame, test_size=0.2, random_state=17):
