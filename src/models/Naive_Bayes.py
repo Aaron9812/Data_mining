@@ -17,7 +17,7 @@ def train_mvb_bayes(df_train: pd.DataFrame, vect: TfidfVectorizer):
     y_train = df_train['label']
 
     # Multi-variate Bernoulli Naive Bayes
-    bnb = ms.GridSearchCV(nb.BernoulliNB(), param_grid={'alpha':np.logspace(-2., 2., 50)})
+    bnb = ms.GridSearchCV(nb.BernoulliNB(), param_grid={'alpha': np.logspace(-5., 2., 100)})
     bnb.fit(Xt_train, y_train);
 
     return bnb
@@ -28,13 +28,13 @@ def train_mn_bayes(df_train: pd.DataFrame, vect: TfidfVectorizer):
     y_train = df_train['label']
 
     # Multinominal Naive Bayes
-    mnb = ms.GridSearchCV(nb.MultinomialNB(), param_grid={'alpha':np.logspace(-2., 2., 50)})
+    mnb = ms.GridSearchCV(nb.MultinomialNB(), param_grid={'alpha':np.logspace(-5., 2., 100)})
     mnb.fit(Xt_train, y_train);
 
     return mnb
 
 
-def test_model(model, df_test: pd.DataFrame, vect: TfidfVectorizer, plt_confusion = False):
+def test_model(model, df_test: pd.DataFrame, vect: TfidfVectorizer, plt_confusion = False, get_params = False):
     
     Xt_test = vect.transform(df_test['preprocessed'])
     y_test = df_test['label']
@@ -46,6 +46,8 @@ def test_model(model, df_test: pd.DataFrame, vect: TfidfVectorizer, plt_confusio
     predictions.append(recall_score(y_test, y_pred))
     predictions.append(accuracy_score(y_test, y_pred))
     predictions.append(f1_score(y_test, y_pred))
+    if get_params is True:
+        predictions.append(model.best_params_)
 
     if plt_confusion is True:
         cm = confusion_matrix(y_test, y_pred)
