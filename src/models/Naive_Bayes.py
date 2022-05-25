@@ -26,12 +26,7 @@ def train_mvb_bayes(df_train: pd.DataFrame, vect: TfidfVectorizer):
     Xt_train = vect.transform(df_train['preprocessed'])
     y_train = df_train['label']
 
-<<<<<<< HEAD
     bnb = ms.GridSearchCV(nb.BernoulliNB(), param_grid={'alpha': np.logspace(-2., 2., 50)})
-=======
-    # Multi-variate Bernoulli Naive Bayes
-    bnb = ms.GridSearchCV(nb.BernoulliNB(), param_grid={'alpha': np.logspace(-5., 2., 100)})
->>>>>>> e8116e49583e7aa64f9c4c1661a0fcc75cf3c241
     bnb.fit(Xt_train, y_train);
 
     return bnb
@@ -50,12 +45,7 @@ def train_mn_bayes(df_train: pd.DataFrame, vect: TfidfVectorizer):
     Xt_train = vect.transform(df_train['preprocessed'])
     y_train = df_train['label']
 
-<<<<<<< HEAD
     mnb = ms.GridSearchCV(nb.MultinomialNB(), param_grid={'alpha':np.logspace(-2., 2., 50)})
-=======
-    # Multinominal Naive Bayes
-    mnb = ms.GridSearchCV(nb.MultinomialNB(), param_grid={'alpha':np.logspace(-5., 2., 100)})
->>>>>>> e8116e49583e7aa64f9c4c1661a0fcc75cf3c241
     mnb.fit(Xt_train, y_train);
 
     return mnb
@@ -63,7 +53,6 @@ def train_mn_bayes(df_train: pd.DataFrame, vect: TfidfVectorizer):
 def test_model(model: ms.GridSearchCV, df_test: pd.DataFrame, vect: TfidfVectorizer, plt_confusion = False, get_params = False):
     ''' Tests sklearn classifier model as GridSearchCV object on test data.
 
-<<<<<<< HEAD
     Args:
         model (): Trained sklearn classifier model
         df_test (pd.DataFrame): DataFrame containing test data
@@ -73,9 +62,6 @@ def test_model(model: ms.GridSearchCV, df_test: pd.DataFrame, vect: TfidfVectori
 
     Returns:
         predictions (list): List containing precision, recall, accuracy, f1 and best hyperparameter
-=======
-def test_model(model, df_test: pd.DataFrame, vect: TfidfVectorizer, plt_confusion = False, get_params = False):
->>>>>>> e8116e49583e7aa64f9c4c1661a0fcc75cf3c241
     
     '''    
     Xt_test = vect.transform(df_test['preprocessed'])
