@@ -2,7 +2,6 @@ from xmlrpc.client import Boolean
 import numpy as np
 import pandas as pd
 from sklearn import naive_bayes
-import sklearn
 import sklearn.model_selection as ms
 import sklearn.feature_extraction.text as text
 import sklearn.naive_bayes as nb
@@ -76,6 +75,8 @@ def test_model(model: ms.GridSearchCV, df_test: pd.DataFrame, vect: TfidfVectori
     predictions.append(f1_score(y_test, y_pred))
     if get_params is True:
         predictions.append(model.best_params_)
+    else:
+        predictions.append('')
 
     if plt_confusion is True:
         cm = confusion_matrix(y_test, y_pred)

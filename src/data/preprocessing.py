@@ -80,13 +80,14 @@ def load_data():
 
 def preprocess(data: pd.Series, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True, no_user=False):
     ''' Performs preprocessing.
+
     Args:
         data (pd.Series): Series containing tweets as str
         rem_stop (boolean): Remove stopwords
         do_stem (boolean): Stemm tokens using porter stemmer
         do_lem (boolean): Lemmatize tokens
         do_emojis (boolean): Convert emojis to str
-        no_user (boolean): remove "user" str
+        no_user (boolean): Remove "user" str
 
     Returns:
         preprocessed (list): List containing preprocessed tweets
@@ -112,6 +113,7 @@ def preprocess(data: pd.Series, rem_stop=True, do_stem=True, do_lem=False, do_em
 
 def train_tfidf(data: pd.Series):
     ''' Trains tfidf model using custom preprocessing.
+
     Args:
         data (pd.Series): Series containing lists of preprocessed tweets
 
@@ -132,6 +134,7 @@ def train_tfidf(data: pd.Series):
 
 def train_count_vectorizer(data: pd.Series):
     ''' Trains CountVectorizer model using custom preprocessing.
+
     Args:
         data (pd.Series): Series containing lists of preprocessed tweets
 
@@ -152,7 +155,16 @@ def train_count_vectorizer(data: pd.Series):
 
 
 def split_data(df: pd.DataFrame, test_size=0.2, random_state=17):
+    ''' Splits dataset into test and train set.
 
+    Args:
+        df (pd.DataFrame): Dataframe containing labeled tweets
+
+    Returns:
+        dF_train(pd.DataFrame): Dataframe containing labeled train tweets
+        dF_test(pd.DataFrame): Dataframe containing labeled test tweets
+    
+    ''' 
     df_train, df_test = ms.train_test_split(df, test_size=test_size, random_state=random_state, stratify=df["label"])
 
     print('There is {} training data, of which {}% is hate speech '.format(df_train['label'].count(), round(df_train['label'].sum()/df_train['label'].count()*100,2)))
@@ -162,6 +174,15 @@ def split_data(df: pd.DataFrame, test_size=0.2, random_state=17):
 
 
 def upsampling(df: pd.DataFrame, replace=True, n_samples=23775, random_state=55):
+    ''' Balances Dataset by upsampling minority class.
+
+    Args:
+        df (pd.DataFrame): Dataframe containing labeled tweets
+
+    Returns:
+        (pd.DataFrame): Concatenated DataFrame containing majority class and upsampled minority class
+    
+    ''' 
     data_minority = df[df.label == 1]
     data_majority = df[df.label == 0]
     data_minority = resample(
@@ -171,31 +192,86 @@ def upsampling(df: pd.DataFrame, replace=True, n_samples=23775, random_state=55)
 
 
 def tokenization(text: str):
+    ''' Tokenizes and lowers str of text.
+
+    Args:
+        text (str): Text as str
+
+    Returns:
+        (pd.Series): Series of tokens
+    
+    ''' 
     return pd.Series(nltk.word_tokenize(text.lower()))
 
 
 def remove_punctuation(tokens: pd.Series):
+    ''' Removes punctuation from series of tokens.
+
+    Args:
+        tokens (pd.Series): Series of tokens
+
+    Returns:
+        (pd.Series): Series of tokens with removed punctuation
+    
+    ''' 
     return "".join([i for i in tokens if i not in punctuation])
 
 
 def remove_stopwords(tokens: pd.Series):
+    ''' Removes stopwords from series of tokens.
+
+    Args:
+        tokens (pd.Series): Series of tokens
+
+    Returns:
+        (pd.Series): Series of tokens without stopwords
+    
+    ''' 
     stopwords_list = stopwords.words("english")
     return tokens.apply(lambda token: token if token not in stopwords_list and token != '' else None).dropna()
 
 
 def stemming(tokens: pd.Series):
+    ''' Stemms series of tokens using porter stemmer.
+
+    Args:
+        tokens (pd.Series): Series of tokens
+
+    Returns:
+        (pd.Series): Series of stemmed tokens
+    
+    '''
     stemmer = PorterStemmer()
 
     return tokens.apply(lambda token: stemmer.stem(token))
 
 
 def lemmatization(tokens: pd.Series):
+    ''' Lemmatize series of tokens using porter stemmer.
+
+    Args:
+        tokens (pd.Series): Series of tokens
+
+    Returns:
+        (pd.Series): Series of lemmatized tokens
+    
+    '''
     lemmatizer = WordNetLemmatizer()
 
     return tokens.apply(lambda token: lemmatizer.lemmatize(token))
 
 
 def convert_emoji(text: str):
+    ''' Converts emojis to text.
+
+    Args:
+        text (pd.Series): Text as str
+
+    Returns:
+       text_with_emoji (str): Str of text with emojis in text form
+       emojis (list): List of emojis contained in text
+    
+    '''
     # convert string to binary representation
     binary = ' '.join(format(ord(x), 'b') for x in text)
 
@@ -218,6 +294,14 @@ def convert_emoji(text: str):
     return text_with_emoji, emojis
 
 def emb_data(data):
+    ''' Creates spacy word embeddings.
+
+    Args:
+        data (pd.Series):
+
+    Returns:
+    
+    '''
     nlp = spacy.load("en_core_web_lg") #If you are using colab and this buggs out: Restart runtime but DO NOT install the "en_core_web_lg" again.
     tweets = data.values.tolist()
     nlp.disable_pipes("parser", "ner") #remove pipe we do not need
@@ -225,6 +309,15 @@ def emb_data(data):
     return pd.Series(embeddings).values
 
 def get_features(df: pd.DataFrame):
+    ''' Creates seperate columns containing number of user mentions, hashtags, emojis and emeddings for each tweet.
+
+    Args:
+        df (pd.DataFrame): Dataframe containing tweets as str
+
+    Returns:
+        df (pd.DataFrame): DataFrame with new columns (number of user mentions, hashtags, emojis and emeddings) appended
+    
+    '''
     df["n_mentions"] = df["tweet"].apply(lambda x: count_user_mentions(x))
     df["hashtags"] = df["tweet"].apply(lambda x: identify_hashtags(x))
     df["emojis"] = df["tweet"].apply(lambda x: convert_emoji(x)[1])
@@ -232,9 +325,27 @@ def get_features(df: pd.DataFrame):
     return df
 
 def count_user_mentions(text:str) ->int:
+    ''' Counts number of user mentions in a tweet.
+
+    Args:
+        text (str): Text as str
+
+    Returns:
+        (int): Number of user mentions in a tweet
+    
+    '''
     return text.count("@user")
 
 def identify_hashtags(text:str) -> list:
+    ''' Returns all hashtags contained in a tweet.
+
+    Args:
+        text (str): Text as str
+
+    Returns:
+        (list): List containing all hastags in a tweet
+    
+    '''
     pattern = re.compile(r"#(\w+)")
     return pattern.findall(text)
 
