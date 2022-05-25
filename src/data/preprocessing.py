@@ -25,6 +25,25 @@ nltk.download('wordnet')
 #!python -m spacy download en_core_web_lg
 
 def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, upsample=True, do_emojis=True, no_user=False, vectorizer='tfidf'):
+    ''' Downloads dataset and performs preprocessing.
+
+    Args:
+        rem_stop (boolean): Remove stopwords
+        do_stem (boolean): Stemm tokens using porter stemmer
+        do_lem (boolean): Lemmatize tokens
+        split (boolean): Split data set
+        upsample (boolean): Upsample data set
+        do_emojis (boolean): Convert emojis to str
+        no_user (boolean): remove "user" str
+        vectorizer (str): Word vectorizer, TF-IDF and CountVectorizer implemented
+
+    Returns:
+        vect (TfidfVectorizer | CountVectorizer): Trained vectorizer
+        df (pd.DataFrame): Returned if split is False. Contains preprocessed tweets
+        df_train (pd.DataFrame): Returned if split is True. Contains preprocessed train tweets
+        df_test (pd.DataFrame): Returned if split is True. Contains preprocessed test tweets
+    
+    ''' 
     df = load_data()
 
     df['preprocessed'] = preprocess(
@@ -48,13 +67,31 @@ def setup(rem_stop=True, do_stem=True, do_lem=False, split=True, upsample=True, 
 
 
 def load_data():
+    ''' Downloads "tweets_hate_speech_detection" dataset.
+    
+    Returns:
+        df (pd.DataFrame): DataFrame containing labeled tweets
+    
+    ''' 
     dataset = load_dataset("tweets_hate_speech_detection")
     df = pd.DataFrame.from_dict(dataset['train'])
     return df
 
 
-def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True, no_user=False):
-    # assert do_stem != do_lem
+def preprocess(data: pd.Series, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True, no_user=False):
+    ''' Performs preprocessing.
+    Args:
+        data (pd.Series): Series containing tweets as str
+        rem_stop (boolean): Remove stopwords
+        do_stem (boolean): Stemm tokens using porter stemmer
+        do_lem (boolean): Lemmatize tokens
+        do_emojis (boolean): Convert emojis to str
+        no_user (boolean): remove "user" str
+
+    Returns:
+        preprocessed (list): List containing preprocessed tweets
+    
+    ''' 
     preprocessed = []
     if no_user is True:
         data = data.str.replace("user","")
@@ -73,7 +110,15 @@ def preprocess(data, rem_stop=True, do_stem=True, do_lem=False, do_emojis=True, 
     return preprocessed
 
 
-def train_tfidf(data):
+def train_tfidf(data: pd.Series):
+    ''' Trains tfidf model using custom preprocessing.
+    Args:
+        data (pd.Series): Series containing lists of preprocessed tweets
+
+    Returns:
+        (TfidfVectorizer): Trained TfidfVectorizer
+    
+    ''' 
     def dummy(text):
         return text
 
@@ -85,7 +130,15 @@ def train_tfidf(data):
 
     return tf.fit(data)
 
-def train_count_vectorizer(data):
+def train_count_vectorizer(data: pd.Series):
+    ''' Trains CountVectorizer model using custom preprocessing.
+    Args:
+        data (pd.Series): Series containing lists of preprocessed tweets
+
+    Returns:
+        (CountVectorizer): Trained CountVectorizer
+    
+    ''' 
     def dummy(text):
         return text
 
@@ -101,6 +154,9 @@ def train_count_vectorizer(data):
 def split_data(df: pd.DataFrame, test_size=0.2, random_state=17):
 
     df_train, df_test = ms.train_test_split(df, test_size=test_size, random_state=random_state, stratify=df["label"])
+
+    print('There is {} training data, of which {}% is hate speech '.format(df_train['label'].count(), round(df_train['label'].sum()/df_train['label'].count()*100,2)))
+    print('There is {} test data, of which {}% is hate speech '.format(df_test['label'].count(), round(df_test['label'].sum()/df_test['label'].count()*100,2)))
 
     return df_train, df_test
 
