@@ -103,9 +103,6 @@ def get_impact_words(df_train: pd.DataFrame, vect: TfidfVectorizer, model = nb.M
     y_train = df_train['label']
   
     model.fit(Xt_train, y_train);
-    
-    model.feature_log_prob_
-    model.coef_
 
     feature_names = vect.get_feature_names_out()
     for i, class_label in enumerate(['no_hate', 'hate']):
