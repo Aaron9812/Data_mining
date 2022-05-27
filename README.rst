@@ -1,7 +1,7 @@
-Information Retrieval Project
+Data Mining
 ------------------------------------------
 
-A solution to the TREC 2020 passage ranking competition.
+Creating a model to recognize hate speech in tweets 
 
 Table of Contents
 #################
