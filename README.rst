@@ -1,4 +1,4 @@
-Data Mining
+Classifying Hate Speech on Twitter
 ------------------------------------------
 
 Creating a model to recognize hate speech in tweets 
@@ -11,9 +11,16 @@ Table of Contents
 Description
 ###########
 
-Information retrieval in computing and information science is the
-process of obtaining information system resources that are relevant to an
-information need from a collection of those resources `[1] <https://en.wikipedia.org/wiki/Information_retrieval/>`_.
+The goal of this project is to identify tweets containing sexism and racism as two
+prominent aspects of hate speech. The dataset used is available on Hugging
+Face <https://huggingface.co/datasets/tweets_hate_speech_detection> and includes 31,962 labled tweets.
+To do so several classification models were implemented:
+* `Decision Tree <https://github.com/Aaron9812/Data_mining/blob/main/src/models/final_decision_tree.ipynb>`__
+* `Logistic Regression <https://github.com/Aaron9812/Data_mining/blob/main/src/models/regression.ipynb>`__
+* `Naive Bayes <https://github.com/Aaron9812/Data_mining/blob/main/src/models/Naive_Bayes.ipynb>`__
+* `Support Vector Machine <https://github.com/Aaron9812/Data_mining/blob/main/src/models/SVM-final.ipynb>`__
+* `Neural Network <https://github.com/Aaron9812/Data_mining/blob/main/src/models/NN_with_CV.ipynb>`__
+* `K-Nearest Neighbour <https://github.com/Aaron9812/Data_mining/blob/main/src/models/KNN_latest_v2.ipynb>`__
 
 How to setup up
 ################
@@ -22,14 +29,10 @@ Follow these steps:
 
 1. Install dependencies
 
-2. Generate features using this `notebook <https://github.com/timg339/Retriever/blob/develop/notebooks/feature_generation.ipynb>`_
-
-3. Evaluate `pairwise <https://github.com/timg339/Retriever/blob/develop/notebooks/pairwise.ipynb>`_ and `pointwise <https://github.com/timg339/Retriever/blob/develop/notebooks/pointwise.ipynb>`_ algorithms.
-
 How to use
 ##########
 
-The module can be used by accessing the command line interface or using the corresponding notebooks.
+Use the Notebooks of the different models to assess
 
 Credits
 #######
@@ -39,6 +42,6 @@ The team consists of:
 
 * `Munir <https://github.com/MunirAbobaker/>`__
 * `Jonas <https://github.com/jodi106/>`__
-* `Stefan <https://github.com/StayFN/>`__
-* `Tobias <https://github.com/tobi-b99/>`__
-* `Tim <https://github.com/timg339/>`__
+* `Aaron <https://github.com/Aaron9812/>`__
+* `Mayte <https://github.com/misssophieexplores/>`__
+* `Anna <https://github.com/annadymanus/>`__
