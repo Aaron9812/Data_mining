@@ -36,7 +36,7 @@ Use the Notebooks of the different models to assess
 Credits
 #######
 
-This project started in March 2022 at the University of Mannheim.
+This project started in April 2022 at the University of Mannheim.
 The team consists of:
 
 * `Munir <https://github.com/MunirAbobaker/>`__
