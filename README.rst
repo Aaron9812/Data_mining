@@ -12,15 +12,15 @@ Description
 ###########
 
 The goal of this project is to identify tweets containing sexism and racism as two
-prominent aspects of hate speech. The dataset used is available on Hugging
-Face <https://huggingface.co/datasets/tweets_hate_speech_detection> and includes 31,962 labled tweets.
+prominent aspects of hate speech. The dataset used is available on `Hugging
+Face <https://huggingface.co/datasets/tweets_hate_speech_detection>'_ and includes 31,962 labled tweets.
 To do so several classification models were implemented:
-* `Decision Tree <https://github.com/Aaron9812/Data_mining/blob/main/src/models/final_decision_tree.ipynb>`__
-* `Logistic Regression <https://github.com/Aaron9812/Data_mining/blob/main/src/models/regression.ipynb>`__
-* `Naive Bayes <https://github.com/Aaron9812/Data_mining/blob/main/src/models/Naive_Bayes.ipynb>`__
-* `Support Vector Machine <https://github.com/Aaron9812/Data_mining/blob/main/src/models/SVM-final.ipynb>`__
-* `Neural Network <https://github.com/Aaron9812/Data_mining/blob/main/src/models/NN_with_CV.ipynb>`__
-* `K-Nearest Neighbour <https://github.com/Aaron9812/Data_mining/blob/main/src/models/KNN_latest_v2.ipynb>`__
+*  `Decision Tree <https://github.com/Aaron9812/Data_mining/blob/main/src/models/final_decision_tree.ipynb>'_
+*  `Logistic Regression <https://github.com/Aaron9812/Data_mining/blob/main/src/models/regression.ipynb>`__
+*  `Naive Bayes <https://github.com/Aaron9812/Data_mining/blob/main/src/models/Naive_Bayes.ipynb>`__
+*  `Support Vector Machine <https://github.com/Aaron9812/Data_mining/blob/main/src/models/SVM-final.ipynb>`__
+*  `Neural Network <https://github.com/Aaron9812/Data_mining/blob/main/src/models/NN_with_CV.ipynb>`__
+*  `K-Nearest Neighbour <https://github.com/Aaron9812/Data_mining/blob/main/src/models/KNN_latest_v2.ipynb>`__
 
 How to setup up
 ################
