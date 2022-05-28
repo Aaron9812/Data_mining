@@ -21,14 +21,12 @@ To do so several classification models were implemented:
 *  `Naive Bayes <https://github.com/Aaron9812/Data_mining/blob/main/src/models/Naive_Bayes.ipynb>`__
 *  `Support Vector Machine <https://github.com/Aaron9812/Data_mining/blob/main/src/models/SVM-final.ipynb>`__
 *  `Neural Network <https://github.com/Aaron9812/Data_mining/blob/main/src/models/NN_with_CV.ipynb>`__
-*  `K-Nearest Neighbour <https://github.com/Aaron9812/Data_mining/blob/main/src/models/KNN_latest_v2.ipynb>`__
+*  `K-Nearest Neighbor <https://github.com/Aaron9812/Data_mining/blob/main/src/models/KNN_latest_v2.ipynb>`__
 
 How to setup up
 ################
 
-Follow these steps:
-
-1. Install dependencies
+Install dependencies
 
 How to use
 ##########
