@@ -151,3 +151,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .DS_Store
+src/models/svm_copy_direct input.ipynb
+src/models/SVM-random-search.ipynb
+src/models/resultcheck_SVM.ipynb
