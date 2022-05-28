@@ -13,9 +13,10 @@ Description
 
 The goal of this project is to identify tweets containing sexism and racism as two
 prominent aspects of hate speech. The dataset used is available on `Hugging
-Face <https://huggingface.co/datasets/tweets_hate_speech_detection>'_ and includes 31,962 labled tweets.
+Face <https://huggingface.co/datasets/tweets_hate_speech_detection>`__ and includes 31,962 labled tweets.
 To do so several classification models were implemented:
-*  `Decision Tree <https://github.com/Aaron9812/Data_mining/blob/main/src/models/final_decision_tree.ipynb>'_
+
+*  `Decision Tree <https://github.com/Aaron9812/Data_mining/blob/main/src/models/final_decision_tree.ipynb>`__
 *  `Logistic Regression <https://github.com/Aaron9812/Data_mining/blob/main/src/models/regression.ipynb>`__
 *  `Naive Bayes <https://github.com/Aaron9812/Data_mining/blob/main/src/models/Naive_Bayes.ipynb>`__
 *  `Support Vector Machine <https://github.com/Aaron9812/Data_mining/blob/main/src/models/SVM-final.ipynb>`__
