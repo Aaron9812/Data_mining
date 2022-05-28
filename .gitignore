@@ -154,3 +154,5 @@ cython_debug/
 src/models/svm_copy_direct input.ipynb
 src/models/SVM-random-search.ipynb
 src/models/resultcheck_SVM.ipynb
+src/models/SVM-copy_for_balanced_class_weight.ipynb
+src/models/0526_SVM.csv
