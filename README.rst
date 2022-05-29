@@ -31,7 +31,7 @@ Install dependencies
 How to use
 ##########
 
-Use the Notebooks of the different models to assess
+Use the Notebooks of the different models to assess. 
 
 Credits
 #######
