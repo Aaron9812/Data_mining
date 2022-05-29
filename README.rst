@@ -33,6 +33,11 @@ How to use
 
 Use the Notebooks of the different models to assess. 
 
+Best model
+########
+
+The best model's configuration and state files are saved in the `src/models <https://github.com/Aaron9812/Data_mining/tree/main/src/models>`__ .
+
 Credits
 #######
 
