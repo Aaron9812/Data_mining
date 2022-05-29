@@ -31,7 +31,11 @@ Install dependencies
 How to use
 ##########
 
-Use the Notebooks of the different models to assess
+Use the Notebooks of the different models to assess. 
+
+Best model
+########
+The best model's configuration and state are saved in the folder `src/models/ <https://github.com/Aaron9812/Data_mining/tree/main/src/models>`__ under names "nn.config" and "nn.model". 
 
 Credits
 #######
